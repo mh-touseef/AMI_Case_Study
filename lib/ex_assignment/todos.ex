@@ -45,10 +45,27 @@ defmodule ExAssignment.Todos do
   ASSIGNMENT: ...
   """
   def get_recommended() do
-    list_todos(:open)
-    |> case do
-      [] -> nil
-      todos -> Enum.take_random(todos, 1) |> List.first()
+    case Repo.get_by(Todo, is_recommended: true) do
+      %Todo{} = todo ->
+        todo
+      nil ->
+        list_todos(:open)
+        |> find_todo_based_on_probability()
+    end
+  end
+
+  defp find_todo_based_on_probability([]), do: nil
+
+  defp find_todo_based_on_probability(todos) do
+    todo = Enum.take_random(todos, 1) |> List.first()
+    update_todo(todo, %{is_recommended: true})
+    todo
+  end
+
+  def reset_persisted_recommended_todo() do
+    case Repo.get_by(Todo, is_recommended: true) do
+      %Todo{} = todo -> update_todo(todo, %{is_recommended: false})
+      _ -> nil
     end
   end
 
@@ -144,7 +161,7 @@ defmodule ExAssignment.Todos do
   """
   def check(id) do
     {_, _} =
-      from(t in Todo, where: t.id == ^id, update: [set: [done: true]])
+      from(t in Todo, where: t.id == ^id, update: [set: [done: true, is_recommended: false]])
       |> Repo.update_all([])
 
     :ok

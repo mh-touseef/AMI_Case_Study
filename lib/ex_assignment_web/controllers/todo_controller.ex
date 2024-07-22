@@ -24,6 +24,7 @@ defmodule ExAssignmentWeb.TodoController do
   def create(conn, %{"todo" => todo_params}) do
     case Todos.create_todo(todo_params) do
       {:ok, _} ->
+        Todos.reset_persisted_recommended_todo()
         conn
         |> put_flash(:info, "Todo created successfully.")
         |> redirect(to: ~p"/todos")
@@ -76,6 +77,7 @@ defmodule ExAssignmentWeb.TodoController do
 
   def uncheck(conn, %{"id" => id}) do
     :ok = Todos.uncheck(id)
+    Todos.reset_persisted_recommended_todo()
 
     conn
     |> redirect(to: ~p"/todos")
