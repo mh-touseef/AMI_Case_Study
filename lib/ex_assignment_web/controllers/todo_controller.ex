@@ -5,9 +5,9 @@ defmodule ExAssignmentWeb.TodoController do
   alias ExAssignment.Todos.Todo
 
   def index(conn, _params) do
+    recommended_todo = Todos.get_recommended()
     open_todos = Todos.list_todos(:open)
     done_todos = Todos.list_todos(:done)
-    recommended_todo = Todos.get_recommended()
 
     render(conn, :index,
       open_todos: open_todos,
@@ -24,6 +24,7 @@ defmodule ExAssignmentWeb.TodoController do
   def create(conn, %{"todo" => todo_params}) do
     case Todos.create_todo(todo_params) do
       {:ok, _} ->
+        Todos.reset_persisted_recommended_todo()
         conn
         |> put_flash(:info, "Todo created successfully.")
         |> redirect(to: ~p"/todos")
@@ -76,6 +77,7 @@ defmodule ExAssignmentWeb.TodoController do
 
   def uncheck(conn, %{"id" => id}) do
     :ok = Todos.uncheck(id)
+    Todos.reset_persisted_recommended_todo()
 
     conn
     |> redirect(to: ~p"/todos")
