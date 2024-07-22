@@ -1,5 +1,11 @@
 defmodule RecommendFinder do
-  @moduledoc false
+  @moduledoc """
+  A module for recommending a todo item based on priority.
+
+  The urgency of a task is inversely proportional to its priority value.
+  Tasks with lower priority values are more urgent and thus have a higher
+  chance of being recommended.
+  """
 
   def recommended(raw_todos) do
   todos = Enum.map(raw_todos, &{&1.id, &1.priority})
