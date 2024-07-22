@@ -23,20 +23,20 @@ defmodule ExAssignment.Todos do
       [%Todo{}, ...]
 
   """
-  def list_todos(type \\ nil) do
-    cond do
-      type == :open ->
-        from(t in Todo, where: not t.done, order_by: t.priority)
-        |> Repo.all()
+  def list_todos(:open) do
+    from(t in Todo, where: not t.done, order_by: t.priority)
+    |> Repo.all()
+    |> Enum.reject(& &1.is_recommended)
+  end
 
-      type == :done ->
-        from(t in Todo, where: t.done, order_by: t.priority)
-        |> Repo.all()
+  def list_todos(:done) do
+    from(t in Todo, where: t.done, order_by: t.priority)
+    |> Repo.all()
+  end
 
-      true ->
-        from(t in Todo, order_by: t.priority)
-        |> Repo.all()
-    end
+  def list_todos(_type) do
+    from(t in Todo, order_by: t.priority)
+    |> Repo.all()
   end
 
   @doc """
