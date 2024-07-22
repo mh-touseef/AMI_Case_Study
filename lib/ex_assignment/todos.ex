@@ -57,7 +57,7 @@ defmodule ExAssignment.Todos do
   defp find_todo_based_on_probability([]), do: nil
 
   defp find_todo_based_on_probability(todos) do
-    todo = Enum.take_random(todos, 1) |> List.first()
+    todo = RecommendFinder.recommended(todos)
     update_todo(todo, %{is_recommended: true})
     todo
   end
