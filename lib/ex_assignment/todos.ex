@@ -7,6 +7,7 @@ defmodule ExAssignment.Todos do
   alias ExAssignment.Repo
 
   alias ExAssignment.Todos.Todo
+  alias ExAssignment.Todos.RecommendFinder
 
   @doc """
   Returns the list of todos, optionally filtered by the given type.
