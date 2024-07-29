@@ -1,4 +1,4 @@
-defmodule RecommendFinder do
+defmodule ExAssignment.Todos.RecommendFinder do
   @moduledoc """
   A module for recommending a todo item based on priority.
 
@@ -8,7 +8,7 @@ defmodule RecommendFinder do
   """
 
   def recommended(raw_todos) do
-  todos = Enum.map(raw_todos, &{&1.id, &1.priority})
+    todos = Enum.map(raw_todos, &{&1.id, &1.priority})
 
     # Step 1: Calculate urgency (inverse of priority)
     urgencies = Enum.map(todos, fn {task, priority} -> {task, 1.0 / priority} end)
